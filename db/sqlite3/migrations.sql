@@ -1,0 +1,1 @@
+create table if not exists  todo (id integer primary key autoincrement , text varchar, created_dt datetime default (DATETIME('now', 'localtime')), resolved_dt datetime null, resolved integer default 0);
