@@ -6,6 +6,8 @@ services:
       dockerfile: docker/Dockerfile
     env_file:
       - .env
+    volumes:
+      - ./db/sqlite3/todo.db:/app/db/sqlite3/todo.db
     ports:
       - $PORT:$PORT
 
