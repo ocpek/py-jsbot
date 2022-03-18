@@ -16,6 +16,7 @@ services:
     ports:
       - "80:80"
     environment:
+      - DOMAIN=$DOMAIN
       - NGINX_PORT=$PORT
     depends_on:
       - app
