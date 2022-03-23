@@ -4,10 +4,11 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    user: 1000
     env_file:
       - .env
     volumes:
-      - ./db/sqlite3/todo.db:/app/db/sqlite3/todo.db
+      - .:/app
     ports:
       - $PORT:$PORT
 
