@@ -10,7 +10,8 @@ RUN pip install poetry && poetry export -o requirements.txt && pip install -r re
 
 
 FROM python:3.9.10-slim-buster as app
+WORKDIR /app
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
 
-ENTRYPOINT uwsgi --ini /app/docker/uwsgi.ini --http :$PORT
+ENTRYPOINT uwsgi --ini docker/uwsgi.ini --http :$PORT
