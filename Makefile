@@ -12,3 +12,6 @@ d-kill:
 
 d-ps:
 	@docker compose ps
+
+d-logs:
+	@docker compose logs -f
