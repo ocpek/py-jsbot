@@ -15,3 +15,9 @@ d-ps:
 
 d-logs:
 	@docker compose logs -f
+
+dbshell:
+	@sqlite3 db/sqlite3/todo.db
+
+migrate:
+	@sqlite3 db/sqlite3/todo.db < db/sqlite3/migrations.sql
