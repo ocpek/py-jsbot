@@ -1,4 +1,4 @@
-.PHONY: d-up d-down d-kill
+.PHONY: d-up d-down d-kill d-ps d-logs dbshell migrate
 UID = $(shell id -u)
 
 d-up:

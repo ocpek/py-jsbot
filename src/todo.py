@@ -38,17 +38,17 @@ class TODO(BaseModel):
 
 class DB:
     q_get = "select * from todo where id = ?"
-    q_list = "select * from todo"
-    q_list_with_resolved = "select * from todo where resolved = ? order by created_dt desc"
-    q_add = "insert into todo (text) values(?)"
+    q_list = "select * from todo where user = ?"
+    q_list_with_resolved = "select * from todo where user = ? and resolved = ? order by created_dt desc"
+    q_add = "insert into todo (text, user) values(?, ?)"
     q_resolve = "update todo set resolved = ?, resolved_dt = ? where id = ?"
 
     def __init__(self):
         self.con = sqlite3.connect("db/sqlite3/todo.db", check_same_thread=False)
         self.con.row_factory = Row
 
-    def list(self):
-        for row in self.con.execute(self.q_list_with_resolved, (False,)):
+    def list(self, user):
+        for row in self.con.execute(self.q_list_with_resolved, (False, user)):
             yield TODO(**row.dict())
 
     def _get(self, _id, cur):
@@ -59,9 +59,9 @@ class DB:
         with self.con as con:
             self._get(_id, con.cursor())
 
-    def add(self, text):
+    def add(self, text, user):
         with self.con as con:
-            con.execute(self.q_add, (text,))
+            con.execute(self.q_add, (text, user))
 
     def resolve(self, _id):
         with self.con as con:
@@ -73,10 +73,10 @@ class TODOApp:
     def __init__(self):
         self.db = DB()
 
-    def ls(self):
+    def ls(self, user):
         blocks = {"blocks": list(list_header_blocks())}
         item_blocks = []
-        for msg in self.db.list():
+        for msg in self.db.list(user):
             item_blocks.extend(msg.get_slack_block())
         if not item_blocks:
             item_blocks = [empty_block()]
@@ -84,8 +84,8 @@ class TODOApp:
         blocks["blocks"].extend(item_blocks)
         return blocks
 
-    def add(self, text):
-        self.db.add(text)
+    def add(self, text, user):
+        self.db.add(text, user)
 
     def resolve(self, _id):
         self.db.resolve(_id)
@@ -95,20 +95,22 @@ def add_todo_command_listener(app):
     todo_app = TODOApp()
 
     @app.command("/todo")
-    def todo(ack, respond, body):
+    def todo(ack, respond, body, logger):
         command, *text = body.get("text").split(None, 1)
+        user = body.get("user_id")
         text = text[0] if text else ""
         if command == "ls":
             ack()
-            respond(todo_app.ls())
+            respond(todo_app.ls(user))
         if command == "add":
-            todo_app.add(text)
+            todo_app.add(text, user)
             ack()
-            respond(todo_app.ls())
+            respond(todo_app.ls(user))
 
     @app.action("todo-message-action")
-    def resolove_action(ack, action, respond, logger):
+    def resolove_action(ack, action, body, respond, logger):
+        user = body.get("user", {}).get("id")
         message_id = action.get("value")
         todo_app.resolve(message_id)
         ack()
-        respond(todo_app.ls())
+        respond(todo_app.ls(user))
