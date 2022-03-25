@@ -73,6 +73,15 @@ class TODOApp:
     def __init__(self):
         self.db = DB()
 
+    def help(self):
+        helps = ["• /todo ls", "• /todo add message"]
+        head_block = {"type": "section", "text": {"type": "mrkdwn", "text": "commands"}}
+        help_block = {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": "\n".join(helps)},
+        }
+        return {"blocks": [head_block, help_block]}
+
     def ls(self, user):
         blocks = {"blocks": list(list_header_blocks())}
         item_blocks = []
@@ -99,6 +108,9 @@ def add_todo_command_listener(app):
         command, *text = body.get("text").split(None, 1)
         user = body.get("user_id")
         text = text[0] if text else ""
+        if command == "help":
+            ack()
+            respond(todo_app.help())
         if command == "ls":
             ack()
             respond(todo_app.ls(user))

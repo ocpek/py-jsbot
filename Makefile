@@ -13,7 +13,7 @@ d-kill:
 d-ps:
 	@docker compose ps
 
-d-restart: d-kill d-up
+d-restart: d-kill d-up d-logs
 
 d-logs:
 	@docker compose logs -f
