@@ -1,4 +1,4 @@
-.PHONY: d-up d-down d-kill d-ps d-logs dbshell migrate
+.PHONY: d-up d-down d-kill d-ps d-restart d-logs dbshell migrate
 UID = $(shell id -u)
 
 d-up:
@@ -12,6 +12,8 @@ d-kill:
 
 d-ps:
 	@docker compose ps
+
+d-restart: d-kill d-up
 
 d-logs:
 	@docker compose logs -f
