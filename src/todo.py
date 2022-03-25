@@ -48,7 +48,7 @@ class DB:
         self.con.row_factory = Row
 
     def list(self, user):
-        for row in self.con.execute(self.q_list_with_resolved, (False, user)):
+        for row in self.con.execute(self.q_list_with_resolved, (user, False)):
             yield TODO(**row.dict())
 
     def _get(self, _id, cur):
