@@ -2,7 +2,6 @@ import sqlite3
 from datetime import datetime
 
 from pydantic import BaseModel
-from src.todo_slack_util import empty_block, list_header_blocks
 
 
 class Row(sqlite3.Row):
@@ -83,12 +82,12 @@ class TODOApp:
         return {"blocks": [head_block, help_block]}
 
     def ls(self, user):
-        blocks = {"blocks": list(list_header_blocks())}
+        blocks = {"blocks": [{"type": "header", "text": {"type": "plain_text", "text": "TODO List"}}]}
         item_blocks = []
         for msg in self.db.list(user):
             item_blocks.extend(msg.get_slack_block())
         if not item_blocks:
-            item_blocks = [empty_block()]
+            item_blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": "Empty"}}]
         item_blocks.append({"type": "divider"})
         blocks["blocks"].extend(item_blocks)
         return blocks
