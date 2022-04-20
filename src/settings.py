@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     SLACK_BOT_TOKEN: str
     SLACK_APP_TOKEN: str
     PORT: int
+    SOCKET_BOT_TOKEN: str
+    SOCKET_APP_TOKEN: str
 
     class Config:
         env_file = ".env"
