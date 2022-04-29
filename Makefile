@@ -21,5 +21,8 @@ d-logs:
 dbshell:
 	@sqlite3 db/sqlite3/todo.db
 
+nginx-bash:
+	@docker compose exec nginx bash
+
 migrate:
 	@sqlite3 db/sqlite3/todo.db < db/sqlite3/migrations.sql

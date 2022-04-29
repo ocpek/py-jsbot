@@ -9,8 +9,8 @@ server {
     access_log /var/log/nginx/access.log;
     error_log /var/log/nginx/error.log;
 
-    location /static {
-        root /usr/share/nginx/html;
+    location /static/ {
+        root /usr/share/nginx/html/;
     }
 
     location / {
