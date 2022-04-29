@@ -16,6 +16,7 @@ services:
     image: nginx
     volumes:
       - ./docker/jsbot.conf.template:/etc/nginx/templates/jsbot.conf.template
+      - $SOURCE_ROOT:/usr/share/nginx/html:ro
     ports:
       - "80:80"
     environment:
