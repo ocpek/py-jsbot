@@ -15,4 +15,4 @@ COPY --from=builder /usr/local/lib/ /usr/local/lib/
 
 WORKDIR /app
 
-ENTRYPOINT uwsgi --ini docker/uwsgi.ini --http :$PORT
+ENTRYPOINT python app.py

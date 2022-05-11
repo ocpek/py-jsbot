@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     PORT: int
     SOCKET_BOT_TOKEN: str
     SOCKET_APP_TOKEN: str
+    JWT_SECRET: str
+    SOURCE_ROOT: str
 
     class Config:
         env_file = ".env"
