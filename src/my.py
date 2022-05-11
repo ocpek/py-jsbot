@@ -1,7 +1,17 @@
+from datetime import datetime, timedelta
+
+import jwt
 from src.common import SlackBaseAppHelper
+from src.settings import settings
 
 
 class MyAppHelper(SlackBaseAppHelper):
+    @classmethod
+    def create_token(cls, user):
+        return jwt.encode(
+            {"user": user, "exp": datetime.now() + timedelta(seconds=10)}, settings.JWT_SECRET, algorithm="HS256"
+        )
+
     def help(self, **kwargs):
         return self.message(
             [
@@ -33,26 +43,40 @@ class MyAppHelper(SlackBaseAppHelper):
         )
 
     def drive(self, *, user):
+        jwt_token = self.create_token(user)
         # 면허증
         return self.message(
             [
-                self.image(image_url="http://kekeke.co.kr/serve?filepath=driver_front.jpg", alt_text=""),
-                self.image(image_url="http://kekeke.co.kr/serve?filepath=driver_back.jpg", alt_text=""),
+                self.image(
+                    image_url=f"http://kekeke.co.kr/serve?filepath=driver_front.jpg&token={jwt_token}", alt_text=""
+                ),
+                self.image(
+                    image_url=f"http://kekeke.co.kr/serve?filepath=driver_back.jpg&token={jwt_token}", alt_text=""
+                ),
             ]
         )
 
     def resident(self, *, user):
+        jwt_token = self.create_token(user)
         # 등본
         return self.message(
             [
-                self.image(image_url="http://kekeke.co.kr/serve?filepath=resident_1.jpg", alt_text=""),
-                self.image(image_url="http://kekeke.co.kr/static/filepath=resident_2.jpg", alt_text=""),
+                self.image(
+                    image_url=f"http://kekeke.co.kr/serve?filepath=resident_1.jpg?token={jwt_token}", alt_text=""
+                ),
+                self.image(
+                    image_url=f"http://kekeke.co.kr/static/filepath=resident_2.jpg?token={jwt_token}", alt_text=""
+                ),
             ]
         )
 
     def credit(self, *, user):
+        jwt_token = self.create_token(user)
         return self.message(
-            [self.image(image_url="https://api.slack.com/img/blocks/bkb_template_images/tripAgent_1.png", alt_text="")]
+            [
+                self.image(image_url=f"http://kekeke.co.kr/serve?filepath=credit_1.jpg?token={jwt_token}", alt_text=""),
+                self.image(image_url=f"http://kekeke.co.kr/serve?filepath=credit_2.jpg?token={jwt_token}", alt_text=""),
+            ]
         )
 
 
@@ -64,7 +88,7 @@ def add_my_command_listener(app):
         print(body)
         try:
             command, *_ = body.get("text").split(None, 1)
-        except ValueError:
+        except (ValueError, AttributeError):
             command = "ls"
 
         user = body.get("user_id")
