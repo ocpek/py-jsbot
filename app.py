@@ -5,6 +5,7 @@ from cherrypy.lib.httputil import urljoin
 from cherrypy.lib.static import serve_file
 from slack_bolt import App
 from slack_bolt.adapter.cherrypy import SlackRequestHandler
+from src.my import add_my_command_listener
 from src.settings import settings
 from src.todo import add_todo_command_listener
 
@@ -29,6 +30,7 @@ def message_test(message, logger, *args, **kwargs):
 
 
 add_todo_command_listener(app)
+add_my_command_listener(app)
 
 
 handler = SlackRequestHandler(app)

@@ -36,9 +36,8 @@ class MyAppHelper(SlackBaseAppHelper):
         # 면허증
         return self.message(
             [
-                self.image(
-                    image_url="https://api.slack.com/img/blocks/bkb_template_images/approvalsNewDevice.png", alt_text=""
-                )
+                self.image(image_url="http://kekeke.co.kr/serve?filepath=driver_front.jpg", alt_text=""),
+                self.image(image_url="http://kekeke.co.kr/serve?filepath=driver_back.jpg", alt_text=""),
             ]
         )
 
@@ -46,9 +45,8 @@ class MyAppHelper(SlackBaseAppHelper):
         # 등본
         return self.message(
             [
-                self.image(
-                    image_url="https://api.slack.com/img/blocks/bkb_template_images/notifications.png", alt_text=""
-                )
+                self.image(image_url="http://kekeke.co.kr/serve?filepath=resident_1.jpg", alt_text=""),
+                self.image(image_url="http://kekeke.co.kr/static/filepath=resident_2.jpg", alt_text=""),
             ]
         )
 
